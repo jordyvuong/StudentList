@@ -13,7 +13,7 @@
         android:theme="@style/Theme.StudentList"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".SignupActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Activité principale (écran d'accueil ou de menu après connexion) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
