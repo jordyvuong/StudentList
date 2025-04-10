@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="loginTitle" type="id" />
+    <item name="signUpText" type="id" />
+    <item name="buttonLogin" type="id" />
+</resources>

@@ -12,16 +12,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentList"
         tools:targetApi="31">
+
+        <!-- Déclaration de l'activité d'inscription -->
         <activity
             android:name=".SignupActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Activité principale (écran d'accueil ou de menu après connexion) -->
+
+        <!-- Déclaration de l'activité de connexion -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true" />
+
+        <!-- Activité principale après connexion -->
         <activity
             android:name=".MainActivity"
             android:exported="true" />

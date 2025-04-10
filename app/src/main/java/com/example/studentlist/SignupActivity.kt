@@ -1,8 +1,10 @@
 package com.example.studentlist
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -30,6 +32,7 @@ class SignupActivity : AppCompatActivity() {
         val passwordEditText = findViewById<EditText>(R.id.editTextPassword)
         val registerButton = findViewById<Button>(R.id.buttonRegister)
 
+        // Lorsque l'utilisateur clique sur le bouton "Register"
         registerButton.setOnClickListener {
             val username = usernameEditText.text.toString()
             val email = emailEditText.text.toString()
@@ -45,6 +48,14 @@ class SignupActivity : AppCompatActivity() {
                     registerUser(username, email, phone, password)
                 }
             }
+        }
+
+        // Lien pour rediriger vers l'écran de connexion
+        val signInTextView = findViewById<TextView>(R.id.signInText)
+        signInTextView.setOnClickListener {
+            // Naviguer vers l'activité de connexion
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 
