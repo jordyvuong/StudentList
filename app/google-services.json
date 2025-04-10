@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "133498348079",
+    "firebase_url": "https://studentlist-d8d52-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "studentlist-d8d52",
     "storage_bucket": "studentlist-d8d52.firebasestorage.app"
   },
