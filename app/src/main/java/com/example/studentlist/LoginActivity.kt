@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Si la connexion réussit, on redirige vers la page principale
                     Toast.makeText(this, "Connexion réussie", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, TaskListActivity::class.java)
                     startActivity(intent)
                     finish() // Ferme l'activité de connexion pour ne pas revenir dessus
                 } else {

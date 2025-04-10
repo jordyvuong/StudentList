@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">StudentList</string>
+    <string name="illustration_image">Illustration d\'image</string>
+    <string name="sous_texte">Créez des groupes, suivez vos produits et recevez des notifications.</string>
+    <string name="accroche">Simplifiez vos courses, gérez vos listes et atteignez vos objectifs d\'achat.</string>
+    <string name="commencez">Commencez</string>
+    <string name="se_connecter">Se connecter</string>
+    <string name="email">Votre e-mail</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="no_register">Vous n\'avez pas de compte ? S\'inscrire</string>
+    <string name="already_log">Vous avez déjà un compte ? Connectez-vous</string>
+    <string name="register">S\'inscrire</string>
 </resources>

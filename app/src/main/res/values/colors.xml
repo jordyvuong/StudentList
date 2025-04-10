@@ -2,7 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="button_color">#4CAF50</color> <!-- Vert clair -->
+    <color name="button_color">#2196F3</color> <!-- Vert clair -->
     <color name="link_color">#2196F3</color> <!-- Bleu clair pour le lien -->
-
+    <color name="selected_icon_color">#2196F3</color> <!-- Bleu clair -->
+    <color name="icon_color">#2196F3</color>
+    <color name="unselected_icon_color">#FF000000</color>
 </resources>

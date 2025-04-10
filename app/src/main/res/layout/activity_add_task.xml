@@ -1,0 +1,62 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".AddTaskActivity">
+
+    <!-- Nom de la tâche -->
+    <EditText
+        android:id="@+id/taskNameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Nom de la tâche"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Quantité -->
+    <EditText
+        android:id="@+id/taskQuantityEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Quantité"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/taskNameEditText" />
+
+    <!-- Date d'échéance -->
+    <EditText
+        android:id="@+id/taskDueDateEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Date d'échéance"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/taskQuantityEditText" />
+
+    <!-- Responsable -->
+    <Spinner
+        android:id="@+id/taskAssigneeSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/taskDueDateEditText" />
+
+    <!-- Bouton pour ajouter la tâche -->
+    <Button
+        android:id="@+id/buttonAddTask"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Ajouter la tâche"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/taskAssigneeSpinner" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

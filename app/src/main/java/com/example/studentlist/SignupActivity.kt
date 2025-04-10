@@ -39,14 +39,13 @@ class SignupActivity : AppCompatActivity() {
             val phone = phoneEditText.text.toString()
             val password = passwordEditText.text.toString()
 
+            // Validation des champs
             if (username.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty()) {
                 Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show()
+            } else if (password.length < 6) {
+                Toast.makeText(this, "Le mot de passe doit contenir au moins 6 caractères", Toast.LENGTH_SHORT).show()
             } else {
-                if (password.length < 6) {
-                    Toast.makeText(this, "Le mot de passe doit contenir au moins 6 caractères", Toast.LENGTH_SHORT).show()
-                } else {
-                    registerUser(username, email, phone, password)
-                }
+                registerUser(username, email, phone, password)
             }
         }
 
@@ -84,8 +83,11 @@ class SignupActivity : AppCompatActivity() {
                                 if (it.isSuccessful) {
                                     // Inscription réussie, on informe l'utilisateur
                                     Toast.makeText(this, "Inscription réussie", Toast.LENGTH_SHORT).show()
-                                    // Naviguer vers la page d'accueil ou d'autres activités
-                                    // Par exemple, commencer MainActivity ou GroupActivity
+
+                                    // Rediriger vers MainActivity après inscription
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()  // Ferme SignupActivity pour ne pas revenir en arrière
                                 } else {
                                     // Erreur lors de l'enregistrement des données dans la base de données
                                     Toast.makeText(this, "Erreur lors de l'inscription dans la base de données", Toast.LENGTH_SHORT).show()
