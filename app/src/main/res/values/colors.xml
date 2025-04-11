@@ -7,4 +7,9 @@
     <color name="selected_icon_color">#2196F3</color> <!-- Bleu clair -->
     <color name="icon_color">#2196F3</color>
     <color name="unselected_icon_color">#FF000000</color>
+    
+    <color name="primaryColor">#1976D2</color> <!-- Bleu par défaut -->
+    <color name="primaryColorDark">#004BA0</color> <!-- Couleur plus sombre -->
+    <color name="accentColor">#FFC107</color> <!-- Couleur d'accent -->
+
 </resources>

@@ -1,6 +1,4 @@
 package com.example.studentlist
-
-import android.content.Intent
 import com.example.studentlist.model.Task
 import android.os.Bundle
 import android.widget.Toast
@@ -9,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.FirebaseDatabase
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.widget.Button
+import android.content.Intent
 
 class TaskListActivity : AppCompatActivity() {
 
@@ -20,7 +20,23 @@ class TaskListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
 
+         // Bouton pour naviguer vers la création de groupe
+    val buttonCreateGroup = findViewById<Button>(R.id.buttonCreateGroup)
+    buttonCreateGroup.setOnClickListener {
+        val intent = Intent(this, CreateGroupActivity::class.java)
+        startActivity(intent)
+    }
+
+        // Bouton pour naviguer vers la liste des groupes
+    val buttonViewGroups = findViewById<Button>(R.id.buttonViewGroups)
+    buttonViewGroups.setOnClickListener {
+        val intent = Intent(this, GroupListActivity::class.java) // Assurez-vous que GroupListActivity existe
+        startActivity(intent)
+    }
+
         recyclerView = findViewById(R.id.recyclerViewTasks)
+
+        
 
         // Configuration du RecyclerView pour afficher les tâches
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -35,28 +51,23 @@ class TaskListActivity : AppCompatActivity() {
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.action_add_task -> {
-                    // Démarrer AddTaskActivity lorsque le bouton "+" est cliqué
                     val intent = Intent(this, AddTaskActivity::class.java)
                     startActivity(intent)
                     true
                 }
                 R.id.nav_home -> {
-                    // Gérer l'action "Home"
                     Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.nav_calendar -> {
-                    // Gérer l'action "Calendar"
                     Toast.makeText(this, "Calendar clicked", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.nav_task -> {
-                    // Gérer l'action "Documents"
                     Toast.makeText(this, "Documents clicked", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.nav_settings -> {
-                    // Gérer l'action "Settings"
                     Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
                     true
                 }
