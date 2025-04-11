@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentList"
         tools:targetApi="31">
-
+        <activity
+            android:name=".CreateGroupActivity"
+            android:exported="false" />
         <!-- Activité principale de la liste des tâches (accessible si nécessaire) -->
         <activity
             android:name=".TaskListActivity"
