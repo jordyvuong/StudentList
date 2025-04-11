@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.studentlist.model.Group
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -53,19 +52,22 @@ class CreateGroupActivity : AppCompatActivity() {
         val groupId = groupRef.key ?: return
 
         // Initialiser le groupe avec l'utilisateur courant comme admin et membre
-        val newGroup = Group(
-            id = groupId,
-            name = groupName,
-            description = groupDescription,
-            adminId = currentUserId,
-            members = mutableMapOf(currentUserId to true)  // Ajoute l'admin comme membre accepté
+        val newGroup = mapOf(
+            "id" to groupId,
+            "name" to groupName,
+            "description" to groupDescription,
+            "adminId" to currentUserId,
+            "members" to mapOf(currentUserId to "accepted"),
+            "requests" to emptyMap<String, Any>(),
+            "tasks" to emptyMap<String, Any>(),
+            "created_at" to System.currentTimeMillis()
         )
 
         // Enregistrer le groupe dans la base de données
         groupRef.setValue(newGroup)
             .addOnSuccessListener {
                 // Ajouter le groupe à la liste des groupes de l'utilisateur
-                database.child("users").child(currentUserId).child("groups").child(groupId).setValue(true)
+                database.child("users").child(currentUserId).child("groups").child(groupId).setValue("accepted")
                     .addOnSuccessListener {
                         Toast.makeText(this, "Group created successfully", Toast.LENGTH_SHORT).show()
                         finish()
@@ -73,6 +75,65 @@ class CreateGroupActivity : AppCompatActivity() {
                     .addOnFailureListener { e ->
                         Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun sendJoinRequest(groupId: String) {
+        val currentUserId = auth.currentUser?.uid ?: return
+        val requestRef = database.child("groups").child(groupId).child("requests").child(currentUserId)
+
+        val request = mapOf(
+            "requested_at" to System.currentTimeMillis(),
+            "status" to "pending"
+        )
+
+        requestRef.setValue(request)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Join request sent", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun acceptJoinRequest(groupId: String, userId: String) {
+        val groupRef = database.child("groups").child(groupId)
+
+        groupRef.child("requests").child(userId).removeValue()
+            .addOnSuccessListener {
+                groupRef.child("members").child(userId).setValue("accepted")
+                    .addOnSuccessListener {
+                        database.child("users").child(userId).child("groups").child(groupId).setValue("accepted")
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "User added to group", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun createTask(groupId: String, taskName: String, assignedTo: String, dueDate: String, quantity: String) {
+        val taskRef = database.child("groups").child(groupId).child("tasks").push()
+        val taskId = taskRef.key ?: return
+
+        val newTask = mapOf(
+            "id" to taskId,
+            "name" to taskName,
+            "assigned_to" to assignedTo,
+            "due_date" to dueDate,
+            "quantity" to quantity,
+            "status" to "not_completed",
+            "created_at" to System.currentTimeMillis()
+        )
+
+        taskRef.setValue(newTask)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Task created successfully", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
