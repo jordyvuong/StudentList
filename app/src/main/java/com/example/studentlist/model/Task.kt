@@ -4,7 +4,8 @@ data class Task(
     val name: String = "",
     val quantity: String = "",
     val assigned_to: String = "",
-    var status: String = "not_completed",  // "not_completed" ou "completed"
+    var status: String = "pending",
     val due_date: String = "",
-    val created_at: Long = 0L  // Firebase stocke les timestamps sous forme de Number, qui est converti en Long
+    val created_at: Long = 0,
+    val group_id: String = ""  // Cette propriété est peut-être manquante
 )

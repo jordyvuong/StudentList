@@ -7,4 +7,6 @@
     <color name="selected_icon_color">#2196F3</color> <!-- Bleu clair -->
     <color name="icon_color">#2196F3</color>
     <color name="unselected_icon_color">#FF000000</color>
+    <color name="admin_group_color">#E3F2FD</color>
+    <color name="member_group_color">#FFFFFF</color>
 </resources>

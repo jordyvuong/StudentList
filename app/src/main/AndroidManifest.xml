@@ -13,17 +13,20 @@
         android:theme="@style/Theme.StudentList"
         tools:targetApi="31">
         <activity
+            android:name=".GroupManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageMembersActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateGroupActivity"
             android:exported="false" />
-        <!-- Activité principale de la liste des tâches (accessible si nécessaire) -->
         <activity
             android:name=".TaskListActivity"
-            android:exported="true" /> <!-- On la rend exportée si elle est utilisée en interne -->
-        <!-- Activité pour ajouter une tâche -->
+            android:exported="true" />
         <activity
             android:name=".AddTaskActivity"
-            android:exported="true" /> <!-- Idem, on l'exporte si elle est lancée par d'autres activités -->
-        <!-- Activité de l'inscription -->
+            android:exported="true" />
         <activity
             android:name=".SignupActivity"
             android:exported="true">
