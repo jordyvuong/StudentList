@@ -4,255 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:background="@color/white"
+    android:padding="16dp"
     tools:context=".TaskListActivity">
 
-    <!-- Categories Title -->
+    <!-- Header Section -->
     <TextView
-        android:id="@+id/categoriesTitle"
+        android:id="@+id/listsTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Categories"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:layout_marginTop="56dp"
+        android:text="Liste des courses"
         android:textColor="@color/black"
+        android:textSize="32sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Category Grid Layout -->
-    <LinearLayout
-        android:id="@+id/categoryGrid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/categoriesTitle">
-
-        <!-- First Row of Categories -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            tools:ignore="ExtraText">
-
-            <!-- Work Category -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/workCategory"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="4dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:strokeWidth="1dp"
-                app:strokeColor="#0080FF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="TODO"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    tools:ignore="UseCompoundDrawables">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/work" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Work"
-                        android:textColor="#1976D2" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Personal Category -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/personalCategory"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="4dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:strokeWidth="1dp"
-                app:strokeColor="#0080FF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="TODO"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    tools:ignore="UseCompoundDrawables">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/profile" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Personal"
-                        android:textColor="#DD2C00" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Shopping Category -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/shoppingCategory"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="4dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:strokeWidth="1dp"
-                app:strokeColor="#0080FF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="TODO"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    tools:ignore="UseCompoundDrawables">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/shopping"
-                        tools:ignore="ImageContrastCheck" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Shopping"
-                        android:textColor="#827717" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <!-- Second Row of Categories (Health only) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3">
-
-            <!-- Health Category -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/healthCategory"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="4dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:strokeWidth="1dp"
-                app:strokeColor="#0080FF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="TODO"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    tools:ignore="UseCompoundDrawables">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/health"
-                        tools:ignore="ImageContrastCheck" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Health"
-                        android:textColor="#D81B60" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Empty spaces for the remaining 2/3 of the row -->
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="2" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Today's Tasks Section -->
-    <LinearLayout
-        android:id="@+id/todayTaskHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="24dp"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@id/categoryGrid">
-
-        <TextView
-            android:id="@+id/todayTaskLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Today's task"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/seeAllLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="See all"
-            android:textColor="#1976D2" />
-    </LinearLayout>
-
-    <!-- Message vide pour aucune tâche -->
     <TextView
-        android:id="@+id/emptyTextView"
-        android:layout_width="match_parent"
+        android:id="@+id/addListButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aucune tâche disponible"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:padding="16dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/todayTaskHeader"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation" />
+        android:text="Add list"
+        android:textColor="#4B5FFC"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/listsTitleText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/listsTitleText" />
 
-    <!-- Task List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewTasks"
+    <!-- ScrollView pour permettre le défilement -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/todayTaskHeader"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        android:layout_marginTop="24dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="List of today's tasks"
-        android:importantForAccessibility="yes"/>
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintTop_toBottomOf="@id/listsTitleText">
 
-    <!-- Floating Action Button -->
+        <!-- Conteneur de listes dynamiques -->
+        <LinearLayout
+            android:id="@+id/listsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <!-- Bouton flottant (masqué) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddTask"
         android:layout_width="wrap_content"
@@ -260,20 +57,21 @@
         android:layout_margin="16dp"
         android:contentDescription="Add new task"
         android:src="@android:drawable/ic_input_add"
+        android:visibility="gone"
+        app:backgroundTint="#1976D2"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="#1976D2"
         app:tint="@android:color/white" />
 
-    <!-- BottomNavigationView -->
+    <!-- Navigation du bas -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:background="@color/white"
         app:itemIconTint="@color/link_color"
         app:itemTextColor="@color/link_color"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

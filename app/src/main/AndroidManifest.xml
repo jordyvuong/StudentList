@@ -42,6 +42,13 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".AddListActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ListDetailActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

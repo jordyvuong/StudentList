@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="card_margin_vertical">8dp</dimen>
+    <dimen name="card_corner_radius">10dp</dimen>
+</resources>

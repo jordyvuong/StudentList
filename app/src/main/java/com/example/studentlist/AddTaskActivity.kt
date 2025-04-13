@@ -114,12 +114,19 @@ class AddTaskActivity : AppCompatActivity() {
                     val groupId = groupSnapshot.key ?: continue
                     val membersSnapshot = groupSnapshot.child("members")
 
-                    if (membersSnapshot.hasChild(currentUserId) &&
-                        membersSnapshot.child(currentUserId).getValue(Boolean::class.java) == true) {
+                    if (membersSnapshot.hasChild(currentUserId)) {
+                        val memberStatus = membersSnapshot.child(currentUserId).getValue()
+                        val isAccepted = when (memberStatus) {
+                            is Boolean -> memberStatus // Si c'est déjà un booléen
+                            is String -> memberStatus == "accepted" // Si c'est une chaîne
+                            else -> false
+                        }
 
-                        val groupName = groupSnapshot.child("name").getValue(String::class.java) ?: "Groupe sans nom"
-                        groups[groupId] = groupName
-                        groupsList.add(groupName)
+                        if (isAccepted) {
+                            val groupName = groupSnapshot.child("name").getValue(String::class.java) ?: "Groupe sans nom"
+                            groups[groupId] = groupName
+                            groupsList.add(groupName)
+                        }
                     }
                 }
 
@@ -168,7 +175,12 @@ class AddTaskActivity : AppCompatActivity() {
 
                     for (memberSnapshot in snapshot.children) {
                         val memberId = memberSnapshot.key ?: continue
-                        val isAccepted = memberSnapshot.getValue(Boolean::class.java) ?: false
+                        val memberStatus = memberSnapshot.getValue()
+                        val isAccepted = when (memberStatus) {
+                            is Boolean -> memberStatus // Si c'est déjà un booléen
+                            is String -> memberStatus == "accepted" // Si c'est une chaîne
+                            else -> false
+                        }
 
                         if (isAccepted) {
                             memberIds.add(memberId)

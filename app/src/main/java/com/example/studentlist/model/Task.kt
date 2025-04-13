@@ -1,11 +1,16 @@
 package com.example.studentlist.model
 
 data class Task(
+    val id: String = "",
     val name: String = "",
     val quantity: String = "",
-    val assigned_to: String = "",
-    var status: String = "pending",
-    val due_date: String = "",
-    val created_at: Long = 0,
-    val group_id: String = ""  // Cette propriété est peut-être manquante
-)
+    val assignedTo: String = "",
+    val assigneeName: String = "",
+    val status: String = "pending",
+    val dueDate: String = "",
+    val createdAt: Long = 0,
+    val groupId: String = ""
+) {
+    val isCompleted: Boolean
+        get() = status == "completed"
+}
