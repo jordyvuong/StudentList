@@ -52,11 +52,11 @@ class ListTasksFragment : Fragment() {
 
         // Configurer le RecyclerView
         taskAdapter = TaskAdapter { task, isCompleted ->
-            updateTaskStatus(task.id, isCompleted)
+            updateTaskStatus(task.id, if (isCompleted) "completed" else "pending")
         }
 
         tasksRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(context)
             adapter = taskAdapter
         }
 
@@ -67,7 +67,7 @@ class ListTasksFragment : Fragment() {
 
     fun loadTasks() {
         val query = database.child("tasks")
-            .orderByChild("list_id")
+            .orderByChild("listId")  // Correction: utiliser listId au lieu de list_id
             .equalTo(listId)
 
         query.addValueEventListener(object : ValueEventListener {
@@ -79,54 +79,53 @@ class ListTasksFragment : Fragment() {
                     val taskId = taskSnapshot.key ?: continue
                     val name = taskSnapshot.child("name").getValue(String::class.java) ?: ""
                     val quantity = taskSnapshot.child("quantity").getValue(String::class.java) ?: ""
-                    val assignedTo = taskSnapshot.child("assigned_to").getValue(String::class.java) ?: ""
+                    val assignedTo = taskSnapshot.child("assignedTo").getValue(String::class.java) ?: ""
+                    val assigneeName = taskSnapshot.child("assigneeName").getValue(String::class.java) ?: ""
                     val status = taskSnapshot.child("status").getValue(String::class.java) ?: "pending"
-                    val dueDate = taskSnapshot.child("due_date").getValue(String::class.java) ?: ""
-                    val createdAt = taskSnapshot.child("created_at").getValue(Long::class.java) ?: 0L
-                    val groupId = taskSnapshot.child("group_id").getValue(String::class.java) ?: ""
+                    val dueDate = taskSnapshot.child("dueDate").getValue(String::class.java) ?: ""
+                    val createdAt = taskSnapshot.child("createdAt").getValue(Long::class.java) ?: 0L
+                    val taskListId = taskSnapshot.child("listId").getValue(String::class.java) ?: ""
 
-                    val task = Task(
-                        id = taskId,
-                        name = name,
-                        quantity = quantity,
-                        assignedTo = assignedTo,
-                        status = status,
-                        dueDate = dueDate,
-                        createdAt = createdAt,
-                        groupId = groupId
-                    )
+                    // Vérifier que cette tâche appartient bien à notre liste
+                    if (taskListId == listId) {
+                        val task = Task(
+                            id = taskId,
+                            name = name,
+                            quantity = quantity,
+                            assignedTo = assignedTo,
+                            assigneeName = assigneeName,
+                            status = status,
+                            dueDate = dueDate,
+                            createdAt = createdAt,
+                            listId = taskListId
+                        )
 
-                    tasks.add(task)
-                    if (assignedTo.isNotEmpty()) {
-                        userIds.add(assignedTo)
+                        tasks.add(task)
+                        if (assignedTo.isNotEmpty()) {
+                            userIds.add(assignedTo)
+                        }
                     }
                 }
 
+                // Mettre à jour l'UI
                 if (tasks.isEmpty()) {
-                    emptyTasksText.visibility = View.VISIBLE
-                    tasksRecyclerView.visibility = View.GONE
+                    showEmptyState()
                 } else {
-                    emptyTasksText.visibility = View.GONE
-                    tasksRecyclerView.visibility = View.VISIBLE
-
-                    // Charger les noms des assignés si nécessaire
+                    showTasks(tasks)
+                    // Si nous avons des utilisateurs assignés, récupérer leurs noms
                     if (userIds.isNotEmpty()) {
-                        loadUserNames(tasks, userIds)
-                    } else {
-                        taskAdapter.updateTasks(tasks)
+                        loadUserDetails(tasks, userIds)
                     }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(requireContext(),
-                    "Erreur de chargement des tâches: ${error.message}",
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Erreur de chargement des tâches: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    private fun loadUserNames(tasks: List<Task>, userIds: Set<String>) {
+    private fun loadUserDetails(tasks: List<Task>, userIds: Set<String>) {
         val tempTasks = tasks.toMutableList()
         var completedQueries = 0
 
@@ -134,18 +133,18 @@ class ListTasksFragment : Fragment() {
             database.child("users").child(userId)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        val displayName = snapshot.child("username").getValue(String::class.java)
-                            ?: "Utilisateur inconnu"
+                        val username = snapshot.child("username").getValue(String::class.java) ?: "Utilisateur inconnu"
 
-                        // Mettre à jour le nom de l'assigné pour chaque tâche
+                        // Mettre à jour les tâches assignées à cet utilisateur avec son nom
                         tempTasks.forEachIndexed { index, task ->
-                            if (task.assignedTo == userId) {
-                                tempTasks[index] = task.copy(assigneeName = displayName)
+                            if (task.assignedTo == userId && task.assigneeName.isEmpty()) {
+                                tempTasks[index] = task.copy(assigneeName = username)
                             }
                         }
 
                         completedQueries++
                         if (completedQueries == userIds.size) {
+                            // Mise à jour de l'adaptateur une seule fois à la fin
                             taskAdapter.updateTasks(tempTasks)
                         }
                     }
@@ -160,8 +159,21 @@ class ListTasksFragment : Fragment() {
         }
     }
 
-    private fun updateTaskStatus(taskId: String, isCompleted: Boolean) {
-        val status = if (isCompleted) "completed" else "pending"
+    private fun updateTaskStatus(taskId: String, status: String) {
         database.child("tasks").child(taskId).child("status").setValue(status)
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun showTasks(tasks: List<Task>) {
+        emptyTasksText.visibility = View.GONE
+        tasksRecyclerView.visibility = View.VISIBLE
+        taskAdapter.updateTasks(tasks)
+    }
+
+    private fun showEmptyState() {
+        emptyTasksText.visibility = View.VISIBLE
+        tasksRecyclerView.visibility = View.GONE
     }
 }
