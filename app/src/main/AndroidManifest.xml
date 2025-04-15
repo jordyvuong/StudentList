@@ -13,14 +13,9 @@
         android:theme="@style/Theme.StudentList"
         tools:targetApi="33">
         <activity
-            android:name=".GroupManagementActivity"
-            android:exported="false" />
-        <activity
             android:name=".ManageMembersActivity"
             android:exported="false" />
-        <activity
-            android:name=".CreateGroupActivity"
-            android:exported="false" />
+
         <activity
             android:name=".TaskListActivity"
             android:exported="true" />

@@ -63,12 +63,7 @@ class AddTaskActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.nav_group -> {
 
-                    val intent = Intent(this, GroupManagementActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
                 R.id.nav_task -> {
                     // Gérer l'action "Documents"
                     Toast.makeText(this, "Documents clicked", Toast.LENGTH_SHORT).show()
