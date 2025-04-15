@@ -1,5 +1,6 @@
 package com.example.studentlist
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,8 +20,11 @@ class ListTasksFragment : Fragment() {
     private lateinit var emptyTasksText: TextView
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var database: DatabaseReference
+    private lateinit var auth: FirebaseAuth
 
     private var listId: String = ""
+    private var isAdmin: Boolean = false
+    private var currentUserId: String = ""
 
     companion object {
         fun newInstance(listId: String): ListTasksFragment {
@@ -38,6 +42,11 @@ class ListTasksFragment : Fragment() {
             listId = it.getString("list_id", "")
         }
         database = FirebaseDatabase.getInstance().reference
+        auth = FirebaseAuth.getInstance()
+        currentUserId = auth.currentUser?.uid ?: ""
+
+        // Vérifier si l'utilisateur est administrateur de cette liste
+        checkAdminStatus()
     }
 
     override fun onCreateView(
@@ -50,10 +59,18 @@ class ListTasksFragment : Fragment() {
         tasksRecyclerView = view.findViewById(R.id.tasksRecyclerView)
         emptyTasksText = view.findViewById(R.id.emptyTasksText)
 
-        // Configurer le RecyclerView
-        taskAdapter = TaskAdapter { task, isCompleted ->
-            updateTaskStatus(task.id, if (isCompleted) "completed" else "pending")
-        }
+        // Configurer le RecyclerView avec la gestion des actions sur les tâches
+        taskAdapter = TaskAdapter(
+            onStatusChange = { task, isCompleted ->
+                updateTaskStatus(task.id, if (isCompleted) "completed" else "pending")
+            },
+            onLongClick = { task ->
+                if (isAdmin) {
+                    showTaskOptionsDialog(task)
+                }
+            },
+            isAdmin = isAdmin
+        )
 
         tasksRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -65,9 +82,28 @@ class ListTasksFragment : Fragment() {
         return view
     }
 
+    private fun checkAdminStatus() {
+        database.child("lists").child(listId).child("owner")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val ownerId = snapshot.getValue(String::class.java) ?: ""
+                    isAdmin = (ownerId == currentUserId)
+
+                    // Mettre à jour l'adaptateur avec le statut d'admin
+                    if (::taskAdapter.isInitialized) {
+                        taskAdapter.updateAdminStatus(isAdmin)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, "Erreur lors de la vérification des droits", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
     fun loadTasks() {
         val query = database.child("tasks")
-            .orderByChild("listId")  // Correction: utiliser listId au lieu de list_id
+            .orderByChild("listId")
             .equalTo(listId)
 
         query.addValueEventListener(object : ValueEventListener {
@@ -99,9 +135,10 @@ class ListTasksFragment : Fragment() {
                             createdAt = createdAt,
                             listId = taskListId
                         )
-
                         tasks.add(task)
-                        if (assignedTo.isNotEmpty()) {
+
+                        // Collecter les IDs utilisateurs pour charger leurs détails
+                        if (assignedTo.isNotEmpty() && assigneeName.isEmpty()) {
                             userIds.add(assignedTo)
                         }
                     }
@@ -112,7 +149,7 @@ class ListTasksFragment : Fragment() {
                     showEmptyState()
                 } else {
                     showTasks(tasks)
-                    // Si nous avons des utilisateurs assignés, récupérer leurs noms
+                    // Si des utilisateurs sont assignés mais sans nom, charger leurs détails
                     if (userIds.isNotEmpty()) {
                         loadUserDetails(tasks, userIds)
                     }
@@ -157,6 +194,41 @@ class ListTasksFragment : Fragment() {
                     }
                 })
         }
+    }
+
+    private fun showTaskOptionsDialog(task: Task) {
+        val options = arrayOf("Supprimer", "Annuler")
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Options pour \"${task.name}\"")
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> showDeleteConfirmationDialog(task)
+                }
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun showDeleteConfirmationDialog(task: Task) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Confirmation")
+            .setMessage("Êtes-vous sûr de vouloir supprimer cette tâche ?")
+            .setPositiveButton("Oui") { _, _ ->
+                deleteTask(task.id)
+            }
+            .setNegativeButton("Non", null)
+            .show()
+    }
+
+    private fun deleteTask(taskId: String) {
+        database.child("tasks").child(taskId).removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(context, "Tâche supprimée avec succès", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun updateTaskStatus(taskId: String, status: String) {

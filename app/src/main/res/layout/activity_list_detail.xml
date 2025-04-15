@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/black" />
 
+
     <TextView
         android:id="@+id/listTitleText"
         android:layout_width="0dp"
@@ -97,6 +98,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:importantForAccessibility="no"
         android:src="@drawable/ic_add"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
@@ -112,5 +114,7 @@
         app:itemTextColor="@color/link_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_menu" />
+    <!-- Ajouter ce bouton près du titre -->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
