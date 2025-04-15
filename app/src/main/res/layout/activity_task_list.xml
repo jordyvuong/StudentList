@@ -13,7 +13,7 @@
         android:id="@+id/listsTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="16dp"
         android:text="Liste des courses"
         android:textColor="@color/black"
         android:textSize="32sp"
@@ -21,25 +21,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/addListButton"
-        android:layout_width="wrap_content"
+    <!-- Section Invitations -->
+    <LinearLayout
+        android:id="@+id/invitationsSection"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add list"
-        android:textColor="#4B5FFC"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@id/listsTitleText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/listsTitleText" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/listsTitleText">
+
+        <TextView
+            android:id="@+id/invitationsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invitations"
+            android:textSize="16sp"
+            android:textColor="@color/button_color"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"/>
+
+        <TextView
+            android:id="@+id/invitationBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/badge_background"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:layout_marginStart="4dp"
+            android:visibility="gone"
+            android:gravity="center"/>
+    </LinearLayout>
 
     <!-- ScrollView pour permettre le défilement -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        app:layout_constraintTop_toBottomOf="@id/listsTitleText">
+        app:layout_constraintTop_toBottomOf="@id/invitationsSection">
 
         <!-- Conteneur de listes dynamiques -->
         <LinearLayout
@@ -49,16 +76,15 @@
             android:orientation="vertical" />
     </ScrollView>
 
-    <!-- Bouton flottant (masqué) -->
+    <!-- Bouton flottant pour ajouter des listes -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:contentDescription="Add new task"
+        android:contentDescription="Ajouter une liste"
         android:src="@android:drawable/ic_input_add"
-        android:visibility="gone"
-        app:backgroundTint="#1976D2"
+        app:backgroundTint="@color/button_color"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@android:color/white" />

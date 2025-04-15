@@ -3,6 +3,7 @@ package com.example.studentlist
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -34,17 +35,17 @@ class TaskListActivity : AppCompatActivity() {
         // Initialiser le conteneur de listes
         listsContainer = findViewById(R.id.listsContainer)
 
-        // Configuration du bouton "Add list"
-        val addListButton: TextView = findViewById(R.id.addListButton)
-        addListButton.setOnClickListener {
+        // Configuration du bouton flottant pour ajouter une liste
+        val fabAddTask: FloatingActionButton = findViewById(R.id.fabAddTask)
+        fabAddTask.setOnClickListener {
             val intent = Intent(this, AddListActivity::class.java)
             startActivity(intent)
         }
 
-        // Configuration du bouton d'ajout de tâche
-        val fabAddTask: FloatingActionButton = findViewById(R.id.fabAddTask)
-        fabAddTask.setOnClickListener {
-            val intent = Intent(this, AddTaskActivity::class.java)
+        // Ajouter le bouton pour accéder aux invitations
+        val invitationsButton: TextView = findViewById(R.id.invitationsButton)
+        invitationsButton.setOnClickListener {
+            val intent = Intent(this, InvitationsActivity::class.java)
             startActivity(intent)
         }
 
@@ -55,6 +56,14 @@ class TaskListActivity : AppCompatActivity() {
         attachDatabaseListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Recharger les listes au retour de l'utilisateur sur l'activité
+        attachDatabaseListener()
+        // Vérifier s'il y a des invitations en attente
+        checkPendingInvitations()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         // Détacher l'écouteur lorsque l'activité est détruite
@@ -63,20 +72,10 @@ class TaskListActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottomNavigation)
-        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+        bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.action_add_task -> {
-                    val intent = Intent(this, AddTaskActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
                 R.id.nav_home -> {
                     // Déjà sur l'écran d'accueil
-                    true
-                }
-                R.id.nav_group -> {
-                    val intent = Intent(this, GroupManagementActivity::class.java)
-                    startActivity(intent)
                     true
                 }
                 R.id.nav_task -> {
@@ -92,14 +91,39 @@ class TaskListActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkPendingInvitations() {
+        val currentUserId = auth.currentUser?.uid ?: return
+        val invitationBadge: TextView = findViewById(R.id.invitationBadge)
+
+        database.child("lists")
+            .orderByChild("members/$currentUserId")
+            .equalTo("pending")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val invitationCount = snapshot.childrenCount.toInt()
+
+                    if (invitationCount > 0) {
+                        invitationBadge.visibility = View.VISIBLE
+                        invitationBadge.text = invitationCount.toString()
+                    } else {
+                        invitationBadge.visibility = View.GONE
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Ne rien faire
+                }
+            })
+    }
+
     private fun attachDatabaseListener() {
         val userId = auth.currentUser?.uid ?: return
 
         // Détacher l'ancien écouteur s'il existe
         detachDatabaseListener()
 
-        // Créer une référence à la base de données pour les listes de l'utilisateur
-        databaseReference = database.child("lists").orderByChild("owner").equalTo(userId).ref
+        // Créer une référence à la base de données pour toutes les listes
+        databaseReference = database.child("lists").ref
 
         // Créer un nouvel écouteur
         valueEventListener = object : ValueEventListener {
@@ -107,19 +131,32 @@ class TaskListActivity : AppCompatActivity() {
                 // Effacer les listes existantes dans la vue
                 listsContainer.removeAllViews()
 
-                if (!snapshot.exists()) {
-                    // Ajouter les listes par défaut
-                    addDefaultLists()
-                    return
-                }
+                // Vérifier si des listes existent
+                var listsFound = false
 
                 for (listSnapshot in snapshot.children) {
                     val listId = listSnapshot.key ?: continue
-                    val name = listSnapshot.child("name").getValue(String::class.java) ?: "Sans nom"
-                    val color = listSnapshot.child("color").getValue(String::class.java) ?: "green"
-                    val icon = listSnapshot.child("icon").getValue(String::class.java) ?: "document"
+                    val owner = listSnapshot.child("owner").getValue(String::class.java) ?: continue
+                    val isOwner = owner == userId
 
-                    addListToView(listId, name, color, icon)
+                    // Vérifier si l'utilisateur est un membre accepté
+                    val memberStatus = listSnapshot.child("members").child(userId).getValue(String::class.java)
+                    val isAcceptedMember = memberStatus == "accepted"
+
+                    // Afficher la liste uniquement si l'utilisateur est propriétaire ou membre accepté
+                    if (isOwner || isAcceptedMember) {
+                        val name = listSnapshot.child("name").getValue(String::class.java) ?: "Sans nom"
+                        val color = listSnapshot.child("color").getValue(String::class.java) ?: "green"
+                        val icon = listSnapshot.child("icon").getValue(String::class.java) ?: "document"
+
+                        addListToView(listId, name, color, icon)
+                        listsFound = true
+                    }
+                }
+
+                // Si aucune liste n'est trouvée, afficher les listes par défaut
+                if (!listsFound) {
+                    addDefaultLists()
                 }
             }
 

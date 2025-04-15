@@ -42,12 +42,6 @@ class CreateGroupActivity : AppCompatActivity() {
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottomNavigation)
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.action_add_task -> {
-                    // Démarrer AddTaskActivity lorsque le bouton "+" est cliqué
-                    val intent = Intent(this, AddTaskActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
                 R.id.nav_home -> {
                     // Aller vers la liste des tâches
                     val intent = Intent(this, TaskListActivity::class.java)

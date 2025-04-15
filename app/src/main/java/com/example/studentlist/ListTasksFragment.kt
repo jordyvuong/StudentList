@@ -1,108 +1,71 @@
 package com.example.studentlist
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.studentlist.databinding.ActivityListDetailBinding
+import androidx.recyclerview.widget.RecyclerView
 import com.example.studentlist.model.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
-class ListDetailActivity : AppCompatActivity() {
+class ListTasksFragment : Fragment() {
 
-    private lateinit var binding: ActivityListDetailBinding
-    private lateinit var database: DatabaseReference
-    private lateinit var auth: FirebaseAuth
+    private lateinit var tasksRecyclerView: RecyclerView
+    private lateinit var emptyTasksText: TextView
     private lateinit var taskAdapter: TaskAdapter
+    private lateinit var database: DatabaseReference
 
     private var listId: String = ""
-    private var listName: String = ""
-    private var listColor: String = ""
-    private var listIcon: String = ""
+
+    companion object {
+        fun newInstance(listId: String): ListTasksFragment {
+            val fragment = ListTasksFragment()
+            val args = Bundle()
+            args.putString("list_id", listId)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityListDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // Initialiser Firebase
+        arguments?.let {
+            listId = it.getString("list_id", "")
+        }
         database = FirebaseDatabase.getInstance().reference
-        auth = FirebaseAuth.getInstance()
+    }
 
-        // Récupérer les données de la liste
-        listId = intent.getStringExtra("list_id") ?: ""
-        listName = intent.getStringExtra("list_name") ?: ""
-        listColor = intent.getStringExtra("list_color") ?: ""
-        listIcon = intent.getStringExtra("list_icon") ?: ""
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_list_tasks, container, false)
 
-        // Configurer le titre
-        binding.listTitleText.text = listName
+        tasksRecyclerView = view.findViewById(R.id.tasksRecyclerView)
+        emptyTasksText = view.findViewById(R.id.emptyTasksText)
 
         // Configurer le RecyclerView
         taskAdapter = TaskAdapter { task, isCompleted ->
             updateTaskStatus(task.id, isCompleted)
         }
 
-        binding.tasksRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@ListDetailActivity)
+        tasksRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = taskAdapter
         }
 
-        // Configurer les boutons
-        binding.backButton.setOnClickListener {
-            finish()
-        }
-
-        binding.addTaskButton.setOnClickListener {
-            val intent = Intent(this, AddTaskActivity::class.java)
-            intent.putExtra("list_id", listId)
-            startActivity(intent)
-        }
-
-        // Configurer la navigation
-        setupBottomNavigation()
-
-        // Charger les tâches
         loadTasks()
+
+        return view
     }
 
-    private fun setupBottomNavigation() {
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.action_add_task -> {
-                    val intent = Intent(this, AddTaskActivity::class.java)
-                    intent.putExtra("list_id", listId)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_home -> {
-                    val intent = Intent(this, TaskListActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_group -> {
-                    val intent = Intent(this, GroupManagementActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_task -> {
-                    Toast.makeText(this, "Documents clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_settings -> {
-                    Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
-    private fun loadTasks() {
+    fun loadTasks() {
         val query = database.child("tasks")
             .orderByChild("list_id")
             .equalTo(listId)
@@ -140,11 +103,11 @@ class ListDetailActivity : AppCompatActivity() {
                 }
 
                 if (tasks.isEmpty()) {
-                    binding.emptyListText.visibility = View.VISIBLE
-                    binding.tasksRecyclerView.visibility = View.GONE
+                    emptyTasksText.visibility = View.VISIBLE
+                    tasksRecyclerView.visibility = View.GONE
                 } else {
-                    binding.emptyListText.visibility = View.GONE
-                    binding.tasksRecyclerView.visibility = View.VISIBLE
+                    emptyTasksText.visibility = View.GONE
+                    tasksRecyclerView.visibility = View.VISIBLE
 
                     // Charger les noms des assignés si nécessaire
                     if (userIds.isNotEmpty()) {
@@ -156,7 +119,7 @@ class ListDetailActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@ListDetailActivity,
+                Toast.makeText(requireContext(),
                     "Erreur de chargement des tâches: ${error.message}",
                     Toast.LENGTH_SHORT).show()
             }
@@ -171,7 +134,7 @@ class ListDetailActivity : AppCompatActivity() {
             database.child("users").child(userId)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        val displayName = snapshot.child("displayName").getValue(String::class.java)
+                        val displayName = snapshot.child("username").getValue(String::class.java)
                             ?: "Utilisateur inconnu"
 
                         // Mettre à jour le nom de l'assigné pour chaque tâche

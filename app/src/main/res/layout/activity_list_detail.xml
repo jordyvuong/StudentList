@@ -45,17 +45,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/listTitleText" />
 
-    <!-- Liste des tâches avec défilement -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tasksRecyclerView"
+    <!-- Onglets pour alterner entre tâches et membres -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/listTitleText"
+        app:tabIndicatorColor="#4B5FFC"
+        app:tabSelectedTextColor="#4B5FFC"
+        app:tabTextColor="@color/black">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tâches" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Membres" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- ViewPager pour gérer les vues d'onglets -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        app:layout_constraintTop_toBottomOf="@id/listTitleText" />
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
-    <!-- Message quand la liste est vide -->
+    <!-- Message quand la liste est vide (maintenu pour compatibilité) -->
     <TextView
         android:id="@+id/emptyListText"
         android:layout_width="wrap_content"
@@ -68,6 +90,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Bouton flottant pour ajouter (visible selon le contexte: tâche ou membre) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <!-- Navigation du bas -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

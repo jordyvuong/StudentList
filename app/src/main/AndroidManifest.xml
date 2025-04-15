@@ -48,6 +48,10 @@
         <activity
             android:name=".ListDetailActivity"
             android:exported="false" />
+        <activity
+            android:name=".InvitationsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.StudentList.NoActionBar" />
 
     </application>
 

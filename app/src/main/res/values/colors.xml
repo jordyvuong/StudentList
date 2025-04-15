@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
     <color name="button_color">#2196F3</color> <!-- Vert clair -->
     <color name="link_color">#2196F3</color> <!-- Bleu clair pour le lien -->
     <color name="selected_icon_color">#2196F3</color> <!-- Bleu clair -->
@@ -10,4 +11,16 @@
     <color name="admin_group_color">#E3F2FD</color>
     <color name="member_group_color">#FFFFFF</color>
     <color name="cardBackground">#F5F5F5</color>
+     <!-- Couleurs existantes -->
+        <color name="purple_200">#FFBB86FC</color>
+        <color name="purple_500">#FF6200EE</color>
+        <color name="purple_700">#FF3700B3</color>
+        <color name="teal_200">#FF03DAC5</color>
+        <color name="teal_700">#FF018786</color>
+
+        <!-- Couleurs ajoutées -->
+        <color name="grey">#757575</color>
+        <color name="green">#4CAF50</color>
+        <color name="orange">#FF9800</color>
+
 </resources>

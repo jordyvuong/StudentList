@@ -10,10 +10,7 @@
         android:id="@+id/nav_group"
         android:icon="@drawable/group"
         android:title="Group" />
-    <item
-        android:id="@+id/action_add_task"
-        android:icon="@android:drawable/ic_input_add"
-        android:title="Add Task" />
+
     <item
         android:id="@+id/nav_task"
         android:icon="@drawable/task"

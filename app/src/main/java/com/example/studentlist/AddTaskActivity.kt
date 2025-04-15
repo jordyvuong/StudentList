@@ -58,9 +58,6 @@ class AddTaskActivity : AppCompatActivity() {
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottomNavigation)
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.action_add_task -> {
-                    true
-                }
                 R.id.nav_home -> {
                     val intent = Intent(this, TaskListActivity::class.java)
                     startActivity(intent)
@@ -85,7 +82,7 @@ class AddTaskActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        bottomNavigation.selectedItemId = R.id.action_add_task
+
     }
 
     private fun setupDatePicker() {
