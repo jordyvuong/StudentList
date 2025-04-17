@@ -25,6 +25,13 @@
     <color name="selected_icon_color">#2196F3</color>
     <color name="icon_color">#2196F3</color>
     <color name="unselected_icon_color">#FF000000</color>
+<<<<<<< HEAD
 
+=======
+    
+    <color name="primaryColor">#1976D2</color> <!-- Bleu par défaut -->
+    <color name="primaryColorDark">#004BA0</color> <!-- Couleur plus sombre -->
+    <color name="accentColor">#FFC107</color> <!-- Couleur d'accent -->
+>>>>>>> a0351fecc92c221ae3f273b97dd67b6a3dd4b661
 
 </resources>

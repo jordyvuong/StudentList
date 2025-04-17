@@ -12,7 +12,7 @@
         android:id="@+id/loginTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connexion"
+        android:text="Login"
         android:textSize="24sp"
         android:textColor="#000000"
         android:layout_marginTop="64dp"
@@ -27,16 +27,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:autofillHints=""
         android:background="@drawable/edit_text_background"
-        android:hint="@string/email"
+        android:hint="Your email"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        android:textColorHint="#546E7A"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginTitle"
-        tools:ignore="VisualLintTextFieldSize" />
+        app:layout_constraintTop_toBottomOf="@id/loginTitle" />
 
     <!-- Mot de passe -->
     <EditText
@@ -44,16 +41,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:autofillHints=""
         android:background="@drawable/edit_text_background"
-        android:hint="@string/mot_de_passe"
+        android:hint="Password"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textColorHint="#546E7A"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmail"
-        tools:ignore="VisualLintTextFieldSize" />
+        app:layout_constraintTop_toBottomOf="@id/editTextEmail" />
 
     <!-- Bouton de connexion -->
     <Button
@@ -61,24 +55,24 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
+        android:background="@color/button_color"
         android:padding="12dp"
-        android:text="@string/se_connecter"
-        android:textColor="@color/white"
+        android:text="Login"
+        android:textColor="#263238"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextPassword"
-        tools:ignore="VisualLintButtonSize" />
+        app:layout_constraintTop_toBottomOf="@id/editTextPassword" />
 
     <!-- Lien pour s'inscrire si l'utilisateur n'a pas de compte -->
     <TextView
         android:id="@+id/signUpText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/no_register"
-        android:textColor="#0277BD"
+        android:text="Don't have an account? Sign up"
+        android:textColor="@color/link_color"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonLogin" />
+        app:layout_constraintTop_toBottomOf="@id/buttonLogin"
+        android:layout_marginTop="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
