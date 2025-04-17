@@ -165,7 +165,8 @@ class SettingsActivity : AppCompatActivity() {
 
         // Bouton Éditer le profil
         editProfileButton.setOnClickListener {
-            Toast.makeText(this@SettingsActivity, "Édition du profil - Fonctionnalité à venir", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@SettingsActivity, EditProfileActivity::class.java)
+            startActivity(intent)
         }
     }
 }
