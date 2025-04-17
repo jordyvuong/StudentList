@@ -25,26 +25,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:textColor="@color/black"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/addTaskButton"
+        app:layout_constraintBottom_toBottomOf="@id/backButton"
         app:layout_constraintStart_toEndOf="@id/backButton"
         app:layout_constraintTop_toTopOf="@id/backButton"
-        app:layout_constraintBottom_toBottomOf="@id/backButton"
         tools:text="Nom de la liste" />
-
-    <TextView
-        android:id="@+id/addTaskButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add task"
-        android:textColor="#4B5FFC"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@id/listTitleText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/listTitleText" />
 
     <!-- Onglets pour alterner entre tâches et membres -->
     <com.google.android.material.tabs.TabLayout
@@ -103,6 +90,18 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
+    <!-- Ajouter ce bouton près du titre -->
+    <Button
+        android:id="@+id/archiveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Archiver"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/listTitleText"
+        app:layout_constraintBottom_toBottomOf="@id/listTitleText"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
     <!-- Navigation du bas -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

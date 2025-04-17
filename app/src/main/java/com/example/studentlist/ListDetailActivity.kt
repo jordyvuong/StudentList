@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.studentlist.databinding.ActivityListDetailBinding
@@ -25,48 +26,57 @@ class ListDetailActivity : AppCompatActivity() {
     private var currentUserId: String = ""
     private var isAdmin: Boolean = false
     private var currentTabPosition: Int = 0
+    private var isArchived: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialiser Firebase
         database = FirebaseDatabase.getInstance().reference
         auth = FirebaseAuth.getInstance()
         currentUserId = auth.currentUser?.uid ?: ""
 
-        // Récupérer les données de la liste
         listId = intent.getStringExtra("list_id") ?: ""
         listName = intent.getStringExtra("list_name") ?: ""
         listColor = intent.getStringExtra("list_color") ?: ""
         listIcon = intent.getStringExtra("list_icon") ?: ""
+        isArchived = intent.getBooleanExtra("is_archived", false)
 
-        // Vérifier l'accès de l'utilisateur avant d'afficher les détails
         checkUserAccess()
     }
 
     private fun setupUI() {
-        // Configurer le titre
         binding.listTitleText.text = listName
 
-        // Initialiser la visibilité du FAB
         binding.fabAdd.visibility = View.VISIBLE
-        binding.addTaskButton.visibility = View.GONE
 
-        // Configurer la couleur de la barre d'état
         window.statusBarColor = getColor(R.color.button_color)
 
-        // Configurer les boutons
+        if (isAdmin) {
+            binding.archiveButton.visibility = View.VISIBLE
+            if (isArchived) {
+                binding.archiveButton.text = "Restaurer"
+            } else {
+                binding.archiveButton.text = "Archiver"
+            }
+            binding.archiveButton.setOnClickListener {
+                if (isArchived) {
+                    showRestoreConfirmationDialog()
+                } else {
+                    showArchiveConfirmationDialog()
+                }
+            }
+        } else {
+            binding.archiveButton.visibility = View.GONE
+        }
+
         setupButtons()
 
-        // Configurer le ViewPager
         setupViewPager(isAdmin)
 
-        // Mettre à jour la visibilité du FAB
         updateFabVisibility(binding.viewPager.currentItem)
 
-        // Configurer la navigation du bas
         setupBottomNavigation()
     }
 
@@ -75,106 +85,94 @@ class ListDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.addTaskButton.setOnClickListener {
-            val intent = Intent(this, AddTaskActivity::class.java)
-            intent.putExtra("list_id", listId)
-            startActivity(intent)
-        }
-
         binding.fabAdd.setOnClickListener {
-            when (currentTabPosition) {
-                0 -> {
-                    // Ajouter une tâche
-                    val intent = Intent(this, AddTaskActivity::class.java)
-                    intent.putExtra("list_id", listId)
-                    startActivity(intent)
-                }
-                1 -> {
-                    // Ajouter un membre
-                    showAddMemberDialog()
-                }
+            if (currentTabPosition == 0) { // Onglet des tâches
+                val intent = Intent(this, AddTaskActivity::class.java)
+                intent.putExtra("list_id", listId)
+                startActivity(intent)
+            } else if (currentTabPosition == 1) { // Onglet des membres
+                val intent = Intent(this, AddMemberDialog::class.java)
+                intent.putExtra("list_id", listId)
+                startActivity(intent)
             }
         }
     }
 
     private fun checkUserAccess() {
-        database.child("lists").child(listId)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (!snapshot.exists()) {
-                        Toast.makeText(this@ListDetailActivity,
-                            "Cette liste n'existe pas", Toast.LENGTH_SHORT).show()
-                        finish()
-                        return
-                    }
+        val listRef = database.child("lists").child(listId)
 
-                    val ownerId = snapshot.child("owner").getValue(String::class.java) ?: ""
-                    val memberStatus = snapshot.child("members")
-                        .child(currentUserId)
-                        .getValue(String::class.java)
-
-                    val isOwner = ownerId == currentUserId
-                    val isAcceptedMember = memberStatus == "accepted"
-
-                    if (!isOwner && !isAcceptedMember) {
-                        Toast.makeText(this@ListDetailActivity,
-                            "Vous n'avez pas accès à cette liste", Toast.LENGTH_SHORT).show()
-                        finish()
-                    } else {
-                        // L'utilisateur a accès à la liste
-                        isAdmin = isOwner
-                        setupUI()
-                    }
+        listRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists()) {
+                    Toast.makeText(this@ListDetailActivity,
+                        "Cette liste n'existe pas", Toast.LENGTH_SHORT).show()
+                    finish()
+                    return
                 }
 
-                override fun onCancelled(error: DatabaseError) {
+                val ownerId = snapshot.child("owner").getValue(String::class.java) ?: ""
+                isAdmin = (ownerId == currentUserId)
+
+                val memberStatus = snapshot.child("members").child(currentUserId).getValue(String::class.java)
+                val isAcceptedMember = memberStatus == "accepted"
+
+                // Vérifier si la liste est archivée
+                isArchived = snapshot.child("archived").getValue(Boolean::class.java) ?: false
+
+                if (isAdmin || isAcceptedMember) {
+                    setupUI()
+                } else {
                     Toast.makeText(this@ListDetailActivity,
-                        "Erreur: ${error.message}", Toast.LENGTH_SHORT).show()
+                        "Vous n'avez pas accès à cette liste", Toast.LENGTH_SHORT).show()
                     finish()
                 }
-            })
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@ListDetailActivity,
+                    "Erreur d'accès à la liste: ${error.message}", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        })
     }
 
-    private fun updateFabVisibility(position: Int) {
-        currentTabPosition = position
-
-        // Toujours afficher le FAB pour l'onglet Tâches
-        if (position == 0) {
-            binding.fabAdd.visibility = View.VISIBLE
-        }
-        // Pour l'onglet Membres, afficher le FAB seulement si l'utilisateur est admin
-        else if (position == 1) {
-            binding.fabAdd.visibility = if (isAdmin) View.VISIBLE else View.GONE
-        }
-
-        binding.addTaskButton.visibility = View.GONE
-    }
-
-    private fun setupViewPager(userIsAdmin: Boolean = false) {
-        // Configurer l'adaptateur du ViewPager
-        pagerAdapter = ListDetailPagerAdapter(this, listId, userIsAdmin)
+    private fun setupViewPager(isAdmin: Boolean) {
+        pagerAdapter = ListDetailPagerAdapter(this, listId, isAdmin)
         binding.viewPager.adapter = pagerAdapter
 
-        // Lier TabLayout au ViewPager
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> "Tâches"
-                1 -> "Membres"
-                else -> ""
-            }
+            tab.text = if (position == 0) "Tâches" else "Membres"
         }.attach()
 
-        // Écouter les changements d'onglet
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
+                currentTabPosition = position
                 updateFabVisibility(position)
             }
         })
     }
 
+    private fun updateFabVisibility(position: Int) {
+        // Dans une liste archivée, on désactive l'ajout de tâches et de membres
+        if (isArchived) {
+            binding.fabAdd.visibility = View.GONE
+            return
+        }
+
+        if (position == 0) { // Onglet des tâches
+            binding.fabAdd.visibility = View.VISIBLE
+        } else if (position == 1) { // Onglet des membres
+            if (isAdmin) {
+                binding.fabAdd.visibility = View.VISIBLE
+            } else {
+                binding.fabAdd.visibility = View.GONE
+            }
+        }
+    }
+
     private fun setupBottomNavigation() {
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
+        val bottomNavigation = binding.bottomNavigation
+        bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
                     val intent = Intent(this, TaskListActivity::class.java)
@@ -183,7 +181,8 @@ class ListDetailActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_task -> {
-                    Toast.makeText(this, "Documents clicked", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ArchivesActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 R.id.nav_settings -> {
@@ -195,18 +194,49 @@ class ListDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAddMemberDialog() {
-        if (isAdmin) {
-            AddMemberDialog(this, listId) {
-                // Au lieu d'appeler directement loadMembers() sur le fragment,
-                // rechargez simplement la page entière
-                val currentPosition = binding.viewPager.currentItem
-                pagerAdapter = ListDetailPagerAdapter(this, listId, isAdmin)
-                binding.viewPager.adapter = pagerAdapter
-                binding.viewPager.setCurrentItem(currentPosition, false)
-            }.show()
-        } else {
-            Toast.makeText(this, "Seul l'administrateur peut ajouter des membres", Toast.LENGTH_SHORT).show()
-        }
+    private fun showArchiveConfirmationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Archiver la liste")
+            .setMessage("Êtes-vous sûr de vouloir archiver cette liste? Elle sera déplacée dans les archives.")
+            .setPositiveButton("Archiver") { _, _ ->
+                archiveList()
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
+    private fun showRestoreConfirmationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Restaurer la liste")
+            .setMessage("Êtes-vous sûr de vouloir restaurer cette liste? Elle sera à nouveau active.")
+            .setPositiveButton("Restaurer") { _, _ ->
+                restoreList()
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
+    private fun archiveList() {
+        database.child("lists").child(listId).child("archived").setValue(true)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Liste archivée avec succès", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun restoreList() {
+        database.child("lists").child(listId).child("archived").setValue(false)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Liste restaurée avec succès", Toast.LENGTH_SHORT).show()
+                isArchived = false
+                binding.archiveButton.text = "Archiver"
+                updateFabVisibility(currentTabPosition)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }

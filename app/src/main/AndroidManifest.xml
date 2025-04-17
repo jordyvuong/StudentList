@@ -12,9 +12,6 @@
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.StudentList"
         tools:targetApi="33">
-        <activity
-            android:name=".ManageMembersActivity"
-            android:exported="false" />
 
         <activity
             android:name=".TaskListActivity"
@@ -46,7 +43,18 @@
             android:name=".InvitationsActivity"
             android:exported="false"
             android:theme="@style/Theme.StudentList.NoActionBar" />
-
+        <activity
+            android:name=".ArchivesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CookiesPolicyActivity"
+            android:exported="false" />
 
     </application>
 
