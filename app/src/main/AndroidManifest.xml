@@ -13,42 +13,60 @@
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.StudentList"
         tools:targetApi="33">
+
+        <!-- Activité principale/de démarrage -->
         <activity
-            android:name=".GroupManagementActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ManageMembersActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CreateGroupActivity"
-            android:exported="false" />
-        <activity
-            android:name=".TaskListActivity"
-            android:exported="true" />
-        <activity
-            android:name=".AddTaskActivity"
-            android:exported="true" />
-        <activity
-            android:name=".SignupActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Activité de connexion -->
+        </activity>
+
+        <!-- Activités d'authentification -->
         <activity
-            android:name=".LoginActivity"
-            android:exported="true" /> <!-- Activité principale après la connexion -->
+            android:name=".activities.LoginActivity"
+            android:exported="false" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true" />
-        <activity
-            android:name=".AddListActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ListDetailActivity"
+            android:name=".activities.SignupActivity"
             android:exported="false" />
 
+        <!-- Activités de gestion des listes -->
+        <activity
+            android:name=".activities.TaskListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ListDetailActivity"
+            android:exported="false" />
+
+        <!-- Activités de gestion des tâches -->
+        <activity
+            android:name=".activities.AddTaskActivity"
+            android:exported="false" />
+
+        <!-- Activités annexes -->
+        <activity
+            android:name=".activities.InvitationsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.StudentList.NoActionBar" />
+        <activity
+            android:name=".activities.ArchivesActivity"
+            android:exported="false" />
+
+        <!-- Activités de paramètres et de politiques -->
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CookiesPolicyActivity"
+            android:exported="false" />
 
     </application>
 

@@ -1,39 +1,45 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.StudentList" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Définir explicitement les couleurs ici -->
+    <!-- Base application theme -->
+    <style name="Base.Theme.StudentList" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Couleurs principales -->
         <item name="colorPrimary">@color/link_color</item>
         <item name="colorSecondary">@color/link_color</item>
 
-        <!-- Customisation des couleurs de bouton -->
-        <item name="buttonStyle">@style/MyButtonStyle</item> <!-- Application du style personnalisé aux boutons -->
+        <!-- Customisation des boutons -->
+        <item name="buttonStyle">@style/MyButtonStyle</item>
 
-        <!-- Définir le fond blanc pour l'ensemble de l'application -->
-        <item name="android:windowBackground">@color/white</item> <!-- Fond blanc -->
+        <!-- Fond blanc pour l'application -->
+        <item name="android:windowBackground">@color/white</item>
+
+        <!-- Support des composants Material Design -->
+        <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
     </style>
 
-    <!-- Applique le thème par défaut pour l'application -->
+    <!-- Thème principal de l'application -->
     <style name="Theme.StudentList" parent="Base.Theme.StudentList" />
 
-
-    <!-- Style personnalisé pour les boutons -->
-    <style name="MyButtonStyle">
-        <item name="android:textColor">@color/white</item>  <!-- Couleur du texte du bouton -->
-        <item name="android:background">@color/link_color</item>  <!-- Couleur de fond du bouton -->
+    <!-- Style pour les activités sans ActionBar -->
+    <style name="Theme.StudentList.NoActionBar" parent="Base.Theme.StudentList">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Thème spécifique pour l'application (fonctions supplémentaires) -->
-    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Couleurs du fond -->
-        <item name="android:windowBackground">@color/white</item> <!-- Fond blanc pour la fenêtre de l'application -->
+    <!-- Style personnalisé pour les boutons -->
+    <style name="MyButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/link_color</item>
+    </style>
 
-        <!-- Couleur de la barre de navigation -->
-        <item name="colorPrimary">@color/selector_navigation_icons</item> <!-- Utiliser l'icône de navigation -->
+    <!-- Thème pour fonctions supplémentaires -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="colorPrimary">@color/selector_navigation_icons</item>
+        <item name="android:textColorPrimary">@color/icon_color</item>
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
 
-        <!-- Couleur des icônes -->
-        <item name="android:textColorPrimary">@color/icon_color</item> <!-- Couleur des icônes -->
-
-        <!-- Définir la couleur de la barre de statut -->
-        <item name="android:statusBarColor">@color/white</item> <!-- Fond blanc pour la barre de statut -->
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 </resources>

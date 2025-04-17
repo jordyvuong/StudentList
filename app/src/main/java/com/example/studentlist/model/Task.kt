@@ -9,7 +9,7 @@ data class Task(
     val status: String = "pending",
     val dueDate: String = "",
     val createdAt: Long = 0,
-    val groupId: String = ""
+    val listId: String = ""
 ) {
     val isCompleted: Boolean
         get() = status == "completed"
