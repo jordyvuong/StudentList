@@ -1,4 +1,4 @@
-package com.example.studentlist
+package com.example.studentlist.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.studentlist.adapters.ListMemberAdapter
+import com.example.studentlist.R
 import com.example.studentlist.model.ListMember
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 class ListMembersFragment : Fragment() {

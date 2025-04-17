@@ -1,8 +1,10 @@
-package com.example.studentlist
+package com.example.studentlist.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.studentlist.fragments.ListMembersFragment
+import com.example.studentlist.fragments.ListTasksFragment
 
 class ListDetailPagerAdapter(
     fragmentActivity: FragmentActivity,

@@ -1,4 +1,4 @@
-package com.example.studentlist // Remplacez par votre package
+package com.example.studentlist.activities // Remplacez par votre package
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import com.example.studentlist.R
 
 class CookiesPolicyActivity : AppCompatActivity() {
 

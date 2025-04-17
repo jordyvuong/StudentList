@@ -1,11 +1,14 @@
-package com.example.studentlist
+package com.example.studentlist.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.studentlist.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -16,8 +19,8 @@ class AddListActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
 
-    private var selectedColor: String = "green" // Couleur par défaut
-    private var selectedIcon: String = "document" // Icône par défaut
+    private var selectedColor: String = "green"
+    private var selectedIcon: String = "document"
 
     private lateinit var colorGreen: View
     private lateinit var colorBlue: View
@@ -33,16 +36,14 @@ class AddListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addlist)
 
-        // Initialiser Firebase
         database = FirebaseDatabase.getInstance().reference
         auth = FirebaseAuth.getInstance()
 
-        // Initialiser les vues
         initViews()
         setupColorSelection()
         setupIconSelection()
+        setupBottomNavigation()
 
-        // Configuration des boutons
         val buttonCancel: Button = findViewById(R.id.buttonCancel)
         buttonCancel.setOnClickListener {
             finish()
@@ -95,7 +96,6 @@ class AddListActivity : AppCompatActivity() {
                 // Reset tous les fonds
                 iconViews.forEach { it.setBackgroundResource(R.drawable.circle_background_light_gray) }
 
-                // Changer le fond de l'icône sélectionnée selon la couleur choisie
                 when (selectedColor) {
                     "green" -> view.setBackgroundResource(R.drawable.circle_background_green)
                     "blue" -> view.setBackgroundResource(R.drawable.circle_background_blue)
@@ -110,6 +110,30 @@ class AddListActivity : AppCompatActivity() {
 
         // Sélection par défaut
         iconDocument.setBackgroundResource(R.drawable.circle_background_green)
+    }
+
+    private fun setupBottomNavigation() {
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottomNavigation)
+        bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    val intent = Intent(this, TaskListActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.nav_task -> {
+                    val intent = Intent(this, ArchivesActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.nav_settings -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun createNewList() {
@@ -152,4 +176,5 @@ class AddListActivity : AppCompatActivity() {
                 Toast.makeText(this, "Erreur: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
 }

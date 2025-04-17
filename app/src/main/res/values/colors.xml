@@ -17,6 +17,7 @@
     <!-- Couleurs spécifiques -->
     <color name="green">#4CAF50</color>
     <color name="orange">#FF9800</color>
+    <color name="cardBackground">#F5F5F5</color>
 
     <!-- Couleurs d'interface -->
     <color name="button_color">#2196F3</color>
@@ -25,8 +26,5 @@
     <color name="icon_color">#2196F3</color>
     <color name="unselected_icon_color">#FF000000</color>
 
-    <!-- Couleurs de groupe -->
-    <color name="admin_group_color">#E3F2FD</color>
-    <color name="member_group_color">#FFFFFF</color>
-    <color name="cardBackground">#F5F5F5</color>
+
 </resources>

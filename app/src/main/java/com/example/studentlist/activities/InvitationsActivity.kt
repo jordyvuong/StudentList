@@ -1,10 +1,13 @@
-package com.example.studentlist
+package com.example.studentlist.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.studentlist.R
+import com.example.studentlist.adapters.InvitationsAdapter
 import com.example.studentlist.databinding.ActivityInvitationsBinding
 import com.example.studentlist.model.Invitation
 import com.google.firebase.auth.FirebaseAuth
@@ -26,11 +29,32 @@ class InvitationsActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         currentUserId = auth.currentUser?.uid ?: ""
 
+        setupBottomNavigation()
         setupRecyclerView()
         loadInvitations()
+    }
 
-        binding.backButton.setOnClickListener {
-            finish()
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation.selectedItemId = R.id.nav_home
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, TaskListActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.nav_task -> {
+                    startActivity(Intent(this, ArchivesActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.nav_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    finish()
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -59,8 +83,7 @@ class InvitationsActivity : AppCompatActivity() {
                         invitations.add(Invitation(listId, listName, ownerId))
                     }
 
-                    binding.emptyInvitationsText.visibility = if (invitations.isEmpty()) View.VISIBLE else View.GONE
-                    binding.invitationsRecyclerView.visibility = if (invitations.isEmpty()) View.GONE else View.VISIBLE
+                    updateEmptyState(invitations.isEmpty())
 
                     // Charger les détails des propriétaires
                     loadOwnerDetails(invitations)
@@ -71,6 +94,13 @@ class InvitationsActivity : AppCompatActivity() {
                         "Erreur: ${error.message}", Toast.LENGTH_SHORT).show()
                 }
             })
+    }
+
+    private fun updateEmptyState(isEmpty: Boolean) {
+        binding.apply {
+            emptyStateContainer.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            invitationsRecyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        }
     }
 
     private fun loadOwnerDetails(invitations: List<Invitation>) {

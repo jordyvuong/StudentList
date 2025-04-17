@@ -1,11 +1,11 @@
-package com.example.studentlist
+package com.example.studentlist.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.studentlist.R
 import com.example.studentlist.model.ListMember
 import com.google.android.material.chip.Chip
 

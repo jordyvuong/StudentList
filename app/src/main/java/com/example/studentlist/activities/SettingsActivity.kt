@@ -1,4 +1,4 @@
-package com.example.studentlist
+package com.example.studentlist.activities
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,9 +10,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import com.example.studentlist.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 
 class SettingsActivity : AppCompatActivity() {
@@ -89,6 +89,8 @@ class SettingsActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        bottomNavigation.selectedItemId = R.id.nav_settings
+
     }
 
     private fun displayAppVersion() {

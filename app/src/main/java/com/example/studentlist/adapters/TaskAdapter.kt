@@ -1,4 +1,4 @@
-package com.example.studentlist
+package com.example.studentlist.adapters
 
 import android.graphics.Paint
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.studentlist.R
 import com.example.studentlist.model.Task
 
 class TaskAdapter(

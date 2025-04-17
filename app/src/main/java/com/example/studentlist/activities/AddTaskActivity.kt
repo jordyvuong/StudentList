@@ -1,4 +1,4 @@
-package com.example.studentlist
+package com.example.studentlist.activities
 
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.studentlist.R
 import com.example.studentlist.databinding.ActivityAddTaskBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -72,11 +73,13 @@ class AddTaskActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_task -> {
-                    Toast.makeText(this, "Documents clicked", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ArchivesActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 R.id.nav_settings -> {
-                    Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false

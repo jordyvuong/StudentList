@@ -1,4 +1,4 @@
-package com.example.studentlist
+package com.example.studentlist.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.studentlist.dialogs.AddMemberDialog
+import com.example.studentlist.adapters.ListDetailPagerAdapter
+import com.example.studentlist.R
 import com.example.studentlist.databinding.ActivityListDetailBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
@@ -91,9 +94,17 @@ class ListDetailActivity : AppCompatActivity() {
                 intent.putExtra("list_id", listId)
                 startActivity(intent)
             } else if (currentTabPosition == 1) { // Onglet des membres
-                val intent = Intent(this, AddMemberDialog::class.java)
-                intent.putExtra("list_id", listId)
-                startActivity(intent)
+                // Créer et afficher le dialogue directement
+                val dialog = AddMemberDialog(
+                    this,
+                    listId,
+                    {
+                        // Fonction appelée quand un membre est ajouté
+                        // Rafraîchir la liste des membres
+                        pagerAdapter.notifyDataSetChanged()
+                    }
+                )
+                dialog.show()
             }
         }
     }
@@ -186,7 +197,8 @@ class ListDetailActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_settings -> {
-                    Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false

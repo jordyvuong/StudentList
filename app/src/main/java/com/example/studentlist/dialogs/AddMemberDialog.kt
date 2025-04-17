@@ -1,11 +1,14 @@
-package com.example.studentlist
+package com.example.studentlist.dialogs
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.Toast
+import com.example.studentlist.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -31,7 +34,27 @@ class AddMemberDialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Demande une fenêtre sans titre
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+
         setContentView(R.layout.dialog_add_member)
+
+        // Configuration de la fenêtre du dialogue
+        window?.apply {
+            setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
+
+            // Définir les marges pour que le dialogue ne prenne pas tout l'écran
+            val params = attributes
+            params?.width = (context.resources.displayMetrics.widthPixels * 0.9).toInt() // 90% de la largeur de l'écran
+            attributes = params
+
+            // Fond blanc par défaut
+            decorView.setBackgroundResource(android.R.color.white)
+        }
 
         // Initialiser Firebase
         database = FirebaseDatabase.getInstance().reference
@@ -64,6 +87,10 @@ class AddMemberDialog(
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+
+        // Style des boutons
+        addButton.setBackgroundColor(context.getColor(R.color.button_color))
+        addButton.setTextColor(context.getColor(R.color.white))
 
         // Configurer les boutons
         cancelButton.setOnClickListener { dismiss() }

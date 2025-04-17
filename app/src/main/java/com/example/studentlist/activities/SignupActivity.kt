@@ -1,4 +1,4 @@
-package com.example.studentlist
+package com.example.studentlist.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import android.util.Log
+import com.example.studentlist.R
 
 class SignupActivity : AppCompatActivity() {
 
