@@ -29,29 +29,23 @@ class TaskListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
 
-        // Initialiser Firebase
         database = FirebaseDatabase.getInstance().reference
         auth = FirebaseAuth.getInstance()
 
-        // Initialiser le conteneur de listes
         listsContainer = findViewById(R.id.listsContainer)
 
-        // Configuration du bouton flottant pour ajouter une liste
         val fabAddTask: FloatingActionButton = findViewById(R.id.fabAddTask)
         fabAddTask.setOnClickListener {
             startActivity(Intent(this, AddListActivity::class.java))
         }
 
-        // Ajouter le bouton pour accéder aux invitations
         val invitationsButton: TextView = findViewById(R.id.invitationsButton)
         invitationsButton.setOnClickListener {
             startActivity(Intent(this, InvitationsActivity::class.java))
         }
 
-        // Gérer les clics sur la barre de navigation
         setupBottomNavigation()
 
-        // Attacher l'écouteur pour charger les listes
         attachDatabaseListener()
     }
 
